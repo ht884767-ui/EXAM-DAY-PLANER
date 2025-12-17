@@ -1,6 +1,5 @@
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
-from langchain.chains import LLMChain
 import os
 
 def create_study_plan(subject, exam_date, weak_topics):
@@ -21,16 +20,18 @@ Weak Topics: {weak_topics}
 
 Include:
 1. Time-blocked study plan
-2. Revision and breaks
+2. Revision and break schedule
 3. Last-minute exam tips
 """
     )
 
-    chain = LLMChain(llm=llm, prompt=prompt)
+    chain = prompt | llm
 
-    return chain.run({
+    response = chain.invoke({
         "subject": subject,
         "exam_date": exam_date,
         "weak_topics": weak_topics
     })
+
+    return response.content
 
